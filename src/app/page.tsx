@@ -131,14 +131,14 @@ export default function Calculator() {
                 value={operation} 
                 onValueChange={setOperation}
             >
-              <SelectTrigger className="w-full bg-zinc-700 border-zinc-600 text-white focus:ring-orange-500">
+              <SelectTrigger className="w-full bg-zinc-700 border-zinc-600 text-white focus:ring-orange-500 cursor-pointer">
                 <SelectValue placeholder="Selecione a operação" />
               </SelectTrigger>
               <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
-                <SelectItem value="Soma">Soma (+)</SelectItem>
-                <SelectItem value="Subtração">Subtração (-)</SelectItem>
-                <SelectItem value="Multiplicação">Multiplicação (x)</SelectItem>
-                <SelectItem value="Divisão">Divisão (÷)</SelectItem>
+                <SelectItem className="cursor-pointer" value="Soma">Soma (+)</SelectItem>
+                <SelectItem className="cursor-pointer" value="Subtração">Subtração (-)</SelectItem>
+                <SelectItem className="cursor-pointer" value="Multiplicação">Multiplicação (x)</SelectItem>
+                <SelectItem className="cursor-pointer" value="Divisão">Divisão (÷)</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -146,7 +146,7 @@ export default function Calculator() {
           {/* Botão de Calcular */}
           <Button
             onClick={onHandleCalculate}
-            className="w-full bg-orange-500 text-white font-bold hover:bg-orange-600 transition-colors mt-6"
+            className="w-full bg-orange-500 text-white font-bold hover:bg-orange-600 transition-colors mt-6 cursor-pointer"
           >
             <Equal className="mr-2 h-4 w-4" />
             CALCULAR
