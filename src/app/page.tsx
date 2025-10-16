@@ -76,7 +76,7 @@ export default function Calculator() {
         
         {/* BOTÃO DE VOLTAR */}
         <Link 
-          href="https://cshub-mauve.vercel.app/" 
+          href="https://cshub-mauve.vercel.app/home" 
           passHref // Necessário para Next/Link
           className="absolute top-4 left-4" // Posição fixa dentro do Card
         >
