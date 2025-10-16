@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-dark text-white">
       <div>
-        <h1 className="text-4xl text-orange-400 font-bold text-center mb-2">CSHUB</h1>
+        <h1 className="text-4xl text-orange-400 font-bold text-center mb-2">CSHUB CALC</h1>
       </div>
 
       <div>
@@ -69,7 +69,7 @@ export default function Home() {
         <select
           name="operations"
           id="operations"
-          className="border rounded-md max-w-full p-2 mb-2 bg-black text-white cursor-pointer hover:bg-orange-400"
+          className="border rounded-md max-w-full p-2 mb-2 bg-black text-white cursor-pointer hover:bg-orange-400 text-center"
           value={operation}
           onChange={(e) => setOperation(e.target.value)}
         >
