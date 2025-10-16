@@ -1,103 +1,100 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [firstNumber, setFirstNumber] = useState('');
+  const [secondNumber, setSecondNumber] = useState('');
+  const [operation, setOperation] = useState('Soma');
+  const [result, setResult] = useState<number | string | null>(null); // Aceita string para mensagens de erro
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+  const onHandleCalculate = () => {
+    const num1 = Number(firstNumber);
+    const num2 = Number(secondNumber);
+
+    if (isNaN(num1) || isNaN(num2)) {
+      setResult("Por favor, insira números válidos");
+      return;
+    }
+
+    if (operation === 'Soma') {
+      setResult(num1 + num2);
+    } else if (operation === 'Subtração') {
+      setResult(num1 - num2);
+    } else if (operation === 'Multiplicação') {
+      setResult(num1 * num2);
+    } else if (operation === 'Divisão') {
+      if (num2 === 0) {
+        setResult("Não é possível dividir por zero");
+      } else {
+        setResult(num1 / num2);
+      }
+    }
+  };
+
+  // Função para formatar números no padrão brasileiro (1.234,56)
+  const formatNumber = (value: number) => {
+    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-dark text-white">
+      <div>
+        <h1 className="text-4xl text-orange-400 font-bold text-center mb-2">CSHUB</h1>
+      </div>
+
+      <div>
+        <input
+          id="firstNumber"
+          className="border rounded-md max-w-full p-2 mb-4"
+          type="text"
+          placeholder="Primeiro número"
+          value={firstNumber}
+          onChange={(e) => setFirstNumber(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <input
+          id="secondNumber"
+          className="border rounded-md max-w-full p-2 mb-5"
+          type="text"
+          placeholder="Segundo número"
+          value={secondNumber}
+          onChange={(e) => setSecondNumber(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <select
+          name="operations"
+          id="operations"
+          className="border rounded-md max-w-full p-2 mb-2 bg-black text-white cursor-pointer hover:bg-orange-400"
+          value={operation}
+          onChange={(e) => setOperation(e.target.value)}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <option value="Soma">Soma</option>
+          <option value="Subtração">Subtração</option>
+          <option value="Multiplicação">Multiplicação</option>
+          <option value="Divisão">Divisão</option>
+        </select>
+      </div>
+
+      <div>
+        <button
+          className="bg-orange-400 rounded-md hover:bg-400 cursor-pointer p-2 mt-2 text-center font-bold"
+          onClick={onHandleCalculate}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          CALCULAR
+        </button>
+      </div>
+
+      <div className="mt-5 bg-white text-orange-400 p-2 rounded-md font-bold max-w-full">
+        <p>
+          O resultado da {operation} é:{' '}
+          {typeof result === 'number' ? formatNumber(result) : result}
+        </p>
+      </div>
     </div>
   );
 }
