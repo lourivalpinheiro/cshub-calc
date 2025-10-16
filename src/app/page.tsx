@@ -1,100 +1,173 @@
 "use client";
 
 import { useState } from "react";
+// Importações de Next.js
+import Link from "next/link"; 
 
-export default function Home() {
+// Importações de Componentes shadcn/ui
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+// Importação de Ícones
+import { Equal, ArrowLeft } from "lucide-react"; 
+
+export default function Calculator() {
   const [firstNumber, setFirstNumber] = useState('');
   const [secondNumber, setSecondNumber] = useState('');
   const [operation, setOperation] = useState('Soma');
-  const [result, setResult] = useState<number | string | null>(null); // Aceita string para mensagens de erro
+  const [result, setResult] = useState<number | string | null>(null);
 
   const onHandleCalculate = () => {
-    const num1 = Number(firstNumber);
-    const num2 = Number(secondNumber);
+    // Substitui vírgula por ponto
+    const num1 = Number(firstNumber.replace(',', '.'));
+    const num2 = Number(secondNumber.replace(',', '.'));
 
     if (isNaN(num1) || isNaN(num2)) {
-      setResult("Por favor, insira números válidos");
+      setResult("Por favor, insira números válidos.");
       return;
     }
 
+    let calculatedResult: number | string;
+
     if (operation === 'Soma') {
-      setResult(num1 + num2);
+      calculatedResult = num1 + num2;
     } else if (operation === 'Subtração') {
-      setResult(num1 - num2);
+      calculatedResult = num1 - num2;
     } else if (operation === 'Multiplicação') {
-      setResult(num1 * num2);
+      calculatedResult = num1 * num2;
     } else if (operation === 'Divisão') {
       if (num2 === 0) {
-        setResult("Não é possível dividir por zero");
+        calculatedResult = "Não é possível dividir por zero.";
       } else {
-        setResult(num1 / num2);
+        calculatedResult = num1 / num2;
       }
+    } else {
+        calculatedResult = "Operação inválida.";
     }
+    
+    setResult(calculatedResult);
   };
 
-  // Função para formatar números no padrão brasileiro (1.234,56)
   const formatNumber = (value: number) => {
-    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
   };
 
+  const resultClassName = 
+    typeof result === 'string' 
+      ? "border-red-500 text-red-400"
+      : "border-orange-400 text-orange-400";
+  
+  // Define o URL de destino
+  const backUrl = "/"; // <--- ATUALIZE ESTA URL para o destino correto, se for diferente de "/"
+  
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-dark text-white">
-      <div>
-        <h1 className="text-4xl text-orange-400 font-bold text-center mb-2">CSHUB CALC</h1>
-      </div>
-
-      <div>
-        <input
-          id="firstNumber"
-          className="border rounded-md max-w-full p-2 mb-4"
-          type="text"
-          placeholder="Primeiro número"
-          value={firstNumber}
-          onChange={(e) => setFirstNumber(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <input
-          id="secondNumber"
-          className="border rounded-md max-w-full p-2 mb-5"
-          type="text"
-          placeholder="Segundo número"
-          value={secondNumber}
-          onChange={(e) => setSecondNumber(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <select
-          name="operations"
-          id="operations"
-          className="border rounded-md max-w-full p-2 mb-2 bg-black text-white cursor-pointer hover:bg-orange-400 text-center"
-          value={operation}
-          onChange={(e) => setOperation(e.target.value)}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-900 text-white p-4 relative"> {/* Adicionado 'relative' para posicionamento */}
+      
+      <Card className="w-full max-w-sm bg-zinc-800 border-zinc-700 shadow-xl relative p-6 sm:p-8"> {/* Adicionado 'relative' para o link flutuar */}
+        
+        {/* BOTÃO DE VOLTAR */}
+        <Link 
+          href="https://cshub-mauve.vercel.app/" 
+          passHref // Necessário para Next/Link
+          className="absolute top-4 left-4" // Posição fixa dentro do Card
         >
-          <option value="Soma">Soma</option>
-          <option value="Subtração">Subtração</option>
-          <option value="Multiplicação">Multiplicação</option>
-          <option value="Divisão">Divisão</option>
-        </select>
-      </div>
+            <Button 
+                variant="ghost" 
+                size="icon" 
+                className="text-zinc-400 hover:text-orange-400 hover:bg-zinc-700 cursor-pointer"
+            >
+                <ArrowLeft className="h-5 w-5" />
+            </Button>
+        </Link>
+        {/* FIM DO BOTÃO DE VOLTAR */}
 
-      <div>
-        <button
-          className="bg-orange-400 rounded-md hover:bg-400 cursor-pointer p-2 mt-2 text-center font-bold"
-          onClick={onHandleCalculate}
-        >
-          CALCULAR
-        </button>
-      </div>
+        <CardHeader className="text-center pb-4 pt-10 sm:pt-4"> {/* Ajustado o padding top para acomodar o botão */}
+          <CardTitle className="text-3xl text-orange-400 font-extrabold tracking-tight">
+            CSHUB CALC
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent className="space-y-6">
+          
+          {/* Campo 1 */}
+          <div className="space-y-2">
+            <Label htmlFor="firstNumber" className="text-zinc-300">Primeiro Número:</Label>
+            <Input
+              id="firstNumber"
+              type="text"
+              placeholder="Ex: 1500,50"
+              value={firstNumber}
+              onChange={(e) => setFirstNumber(e.target.value)}
+              className="bg-zinc-700 border-zinc-600 text-white placeholder:text-zinc-400 focus-visible:ring-orange-500"
+            />
+          </div>
 
-      <div className="mt-5 bg-white text-orange-400 p-2 rounded-md font-bold max-w-full">
-        <p>
-          O resultado da {operation} é:{' '}
-          {typeof result === 'number' ? formatNumber(result) : result}
-        </p>
-      </div>
+          {/* Campo 2 */}
+          <div className="space-y-2">
+            <Label htmlFor="secondNumber" className="text-zinc-300">Segundo Número:</Label>
+            <Input
+              id="secondNumber"
+              type="text"
+              placeholder="Ex: 25,25"
+              value={secondNumber}
+              onChange={(e) => setSecondNumber(e.target.value)}
+              className="bg-zinc-700 border-zinc-600 text-white placeholder:text-zinc-400 focus-visible:ring-orange-500"
+            />
+          </div>
+
+          {/* Seleção de Operação */}
+          <div className="space-y-2">
+            <Label htmlFor="operations" className="text-zinc-300">Operação:</Label>
+            <Select 
+                value={operation} 
+                onValueChange={setOperation}
+            >
+              <SelectTrigger className="w-full bg-zinc-700 border-zinc-600 text-white focus:ring-orange-500">
+                <SelectValue placeholder="Selecione a operação" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
+                <SelectItem value="Soma">Soma (+)</SelectItem>
+                <SelectItem value="Subtração">Subtração (-)</SelectItem>
+                <SelectItem value="Multiplicação">Multiplicação (x)</SelectItem>
+                <SelectItem value="Divisão">Divisão (÷)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Botão de Calcular */}
+          <Button
+            onClick={onHandleCalculate}
+            className="w-full bg-orange-500 text-white font-bold hover:bg-orange-600 transition-colors mt-6"
+          >
+            <Equal className="mr-2 h-4 w-4" />
+            CALCULAR
+          </Button>
+
+          {/* Área de Resultado */}
+          <div className={`p-4 mt-6 rounded-lg border-2 ${resultClassName} bg-zinc-700/50 text-center font-bold text-lg`}>
+            <p>
+              Resultado: {' '}
+              <span className="text-white">
+                {result === null 
+                    ? 'Aguardando cálculo...' 
+                    : typeof result === 'number' 
+                        ? formatNumber(result) 
+                        : result}
+              </span>
+            </p>
+          </div>
+          
+        </CardContent>
+      </Card>
     </div>
   );
 }
