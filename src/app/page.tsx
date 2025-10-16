@@ -79,7 +79,6 @@ export default function Calculator() {
           href="https://cshub-mauve.vercel.app/home" 
           passHref // Necessário para Next/Link
           className="absolute top-4 left-4" // Posição fixa dentro do Card
-          target="blank"
         >
             <Button 
                 variant="ghost" 
@@ -166,6 +165,7 @@ export default function Calculator() {
               </span>
             </p>
           </div>
+    
           
         </CardContent>
       </Card>
